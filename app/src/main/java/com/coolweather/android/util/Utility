@@ -1,3 +1,5 @@
+package com.coolweather.android.util;
+
 import android.text.TextUtils;
 
 import com.coolweather.android.db.City;
