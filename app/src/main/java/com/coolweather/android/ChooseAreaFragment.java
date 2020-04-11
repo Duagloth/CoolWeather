@@ -1,7 +1,6 @@
 package com.coolweather.android;
 
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,10 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
@@ -36,8 +35,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static android.app.PendingIntent.getActivity;
-import static org.litepal.LitePalApplication.getContext;
 
 public class ChooseAreaFragment extends Fragment {
     /**
