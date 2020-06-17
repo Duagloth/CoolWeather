@@ -18,10 +18,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import javax.security.auth.callback.Callback;
+//import javax.security.auth.callback.Callback;
 
 import okhttp3.Response;
 
+import okhttp3.Callback;
 
 public class AutoUpdateService extends Service {
     public AutoUpdateService() {
@@ -55,15 +56,10 @@ public class AutoUpdateService extends Service {
             //有缓存时直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
             String weatherId = weather.basic.weatherId;
-            String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId
-                    + "&key=676f1803f4c34fffa527351e0afcfb8f";  // 注意此处替换为之前申请的 API Key
-            HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
+            String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=676f1803f4c34fffa527351e0afcfb8f";  // 注意此处替换为之前申请的 API Key
+            HttpUtil.sendOkHttpRequest(weatherUrl,new Callback() {
                 @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    e.printStackTrace();
-                }
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                public void onResponse(@NotNull okhttp3.Call call, @NotNull Response response) throws IOException {
                     final String responseText = response.body().string();
                     final Weather weather = Utility.handleWeatherResponse(responseText);
                     if (weather != null && "ok".equals(weather.status)) {
@@ -74,6 +70,11 @@ public class AutoUpdateService extends Service {
                         editor.apply();
                     }
                 }
+
+                @Override
+                public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                }
             });
         }
     }
@@ -82,18 +83,20 @@ public class AutoUpdateService extends Service {
      */
     private void updateBingPic(){
         String requestBingPic="http://guolin.tech/api/bing_pic";
-        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
+        HttpUtil.sendOkHttpRequest(requestBingPic,new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull okhttp3.Call call, @NotNull Response response) throws IOException {
                 String bingPic = response.body().string();
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(AutoUpdateService.this).edit();
                 editor.putString("bing_pic",bingPic);
                 editor.apply();
             }
+
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
         });
     }
 }
